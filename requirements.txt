@@ -1,0 +1,11 @@
+fastapi[standard]
+pydantic
+pydantic_settings
+sqlalchemy
+psycopg2
+uvicorn
+passlib
+python-jose
+bcrypt
+supabase
+fastapi-mail
