@@ -19,9 +19,13 @@ class UserCreate(BaseModel):
 	email: EmailStr
 	username: str
 	password: str
-	role: Optional[str] = "user"
 	gender: Optional[str] = None
 	birth_date: Optional[datetime] = None
+
+# USER EMAIL VERIFICATION
+class EmailVerification(BaseModel):
+	email: EmailStr
+	code: str
 
 # USER INFO RESPONSE
 class UserOut(BaseModel):
@@ -30,3 +34,13 @@ class UserOut(BaseModel):
 	username: str
 	gender: Optional[str] = None
 	birth_date: Optional[datetime] = None
+
+# USER SIGNUP RESPONSE
+class SignupOut(BaseModel):
+	id: UUID
+	email: EmailStr
+	username: str
+	gender: Optional[str] = None
+	verif_code: str
+	birth_date: Optional[datetime] = None
+

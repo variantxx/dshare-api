@@ -9,3 +9,4 @@ python-jose
 bcrypt
 supabase
 fastapi-mail
+slowapi

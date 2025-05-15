@@ -7,7 +7,7 @@ from . import models
 from .utils import api_key_auth
 
 
-# Create the tables
+# Initialize the database
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -17,6 +17,7 @@ app = FastAPI(
 	redoc_url="/docs/redoc",
 )
 
+# Middleware for CORS
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=[

@@ -1,4 +1,6 @@
 import uuid
+import random
+import string
 from sqlalchemy import Column, String, Boolean, ForeignKey
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
@@ -16,8 +18,9 @@ class User(Base):
 	gender         = Column(String, nullable=True, default=None)
 	birth_date     = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
 	confirmed      = Column(Boolean, nullable=False, server_default=text("false"))
-	pending 			= Column(Boolean, nullable=False, server_default=text("false"))
-	deleted			= Column(Boolean, nullable=False, server_default=text("false"))
+	verif_code     = Column(String, nullable=False)
+	pending        = Column(Boolean, nullable=False, server_default=text("false"))
+	deleted        = Column(Boolean, nullable=False, server_default=text("false"))
 	created_at     = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
 
 class Upload(Base):

@@ -1,6 +1,6 @@
-import uuid
 import random
 import string
+import uuid
 from fastapi import HTTPException, Header, Security, UploadFile, status
 from fastapi.security import APIKeyHeader
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
@@ -31,12 +31,11 @@ async def randomized_filename(file: UploadFile):
 	new_filename = f"{uuid.uuid4()}.{file_ext}"
 	return new_filename
 
-async def send_email_verification(username: str, email: str):
-	verification_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
+async def send_email_verification(username: str, email: str, verif_code: str):
 	template = f"""
 	<p>Hello {username},</p>
 	<p>Thank you for signing up on our platform!</p>
-	<p>Your email verification code is: <strong>{verification_code}</strong></p>
+	<p>Your email verification code is: <strong>{verif_code}</strong></p>
 	<p>Please use this code to verify your email address.</p>
 	"""
 	message = MessageSchema(
@@ -47,7 +46,7 @@ async def send_email_verification(username: str, email: str):
 	)
 	fm = FastMail(conf)
 	await fm.send_message(message)
-	return verification_code
+	return
 
 def validate_api_key(api_key: str):
 	if api_key != settings.SERVER_API_KEY:
@@ -55,6 +54,10 @@ def validate_api_key(api_key: str):
 			status_code=status.HTTP_401_UNAUTHORIZED,
 			detail="Invalid API Key"
 		)
+
+def gen_verif_code():
+	verif_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
+	return verif_code
 
 async def api_key_auth(api_key: str = Security(APIKeyHeader(name="X-API-Key", auto_error=False))):
 	if api_key is None:

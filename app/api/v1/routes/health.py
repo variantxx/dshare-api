@@ -1,13 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from ....config import settings
 
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 @router.get("/")
-async def health_check():
+@limiter.limit("10/minute")
+async def health_check(request: Request):
 	return {
-		"app_name": "DShare API",
-		"description": "DShare is a platform that allows users to share PDF, PPT, and DOC files.",
+		"app_name": settings.APP_NAME,
+		"description": settings.APP_DESCRIPTION,
 		"version": "1.0.0",
 		"status": "ok",
 	}
