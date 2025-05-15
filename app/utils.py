@@ -1,7 +1,8 @@
 import uuid
 import random
 import string
-from fastapi import UploadFile
+from fastapi import HTTPException, Header, Security, UploadFile, status
+from fastapi.security import APIKeyHeader
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 from passlib.context import CryptContext
 from .config import settings
@@ -18,7 +19,6 @@ conf = ConnectionConfig(
 	MAIL_STARTTLS = True,
 	MAIL_SSL_TLS = False
 )
-
 
 def hash(password: str):
 	return pwd_context.hash(password)
@@ -48,3 +48,17 @@ async def send_email_verification(username: str, email: str):
 	fm = FastMail(conf)
 	await fm.send_message(message)
 	return verification_code
+
+def validate_api_key(api_key: str):
+	if api_key != settings.SERVER_API_KEY:
+		raise HTTPException(
+			status_code=status.HTTP_401_UNAUTHORIZED,
+			detail="Invalid API Key"
+		)
+
+async def api_key_auth(api_key: str = Security(APIKeyHeader(name="X-API-Key", auto_error=False))):
+	if api_key is None:
+		raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="API Key missing")
+	validate_api_key(api_key)
+	return api_key
+

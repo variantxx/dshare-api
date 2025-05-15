@@ -11,7 +11,7 @@ class User(Base):
 	id             = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
 	email          = Column(String, nullable=False, unique=True)
 	username       = Column(String, nullable=False)
-	role           = Column(String, nullable=False, server_default=text("'client'"))
+	role           = Column(String, nullable=False, server_default=text("'user'"))
 	password       = Column(String, nullable=False)
 	gender         = Column(String, nullable=True, default=None)
 	birth_date     = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
