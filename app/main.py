@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from .api.v1.routes import auth, me, health, users
+from .api.v1.routes import auth, me, health, users, uploads
 from .database import engine
 from .config import settings
 from . import models
@@ -33,3 +33,5 @@ app.include_router(health.router, prefix="/v1", tags=["Health"], dependencies=[D
 app.include_router(auth.router, prefix="/v1/auth", tags=["Authentication"])
 app.include_router(me.router, prefix="/v1/me", tags=["Logged User"], dependencies=[Depends(api_key_auth)])
 app.include_router(users.router, prefix="/v1/users", tags=["Users"], dependencies=[Depends(api_key_auth)])
+app.include_router(uploads.router, prefix="/v1/uploads", tags=["Uploads"], dependencies=[Depends(api_key_auth)])
+

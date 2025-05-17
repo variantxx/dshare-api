@@ -1,7 +1,11 @@
+import os
 import random
 import string
 import uuid
-from fastapi import HTTPException, Header, Security, UploadFile, status
+import fitz
+from io import BytesIO
+from PIL import Image
+from fastapi import HTTPException, Security, UploadFile, status
 from fastapi.security import APIKeyHeader
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 from passlib.context import CryptContext
@@ -35,7 +39,7 @@ async def send_email_verification(username: str, email: str, verif_code: str):
 	template = f"""
 	<p>Hello {username},</p>
 	<p>Thank you for signing up on our platform!</p>
-	<p>Your email verification code is: <strong>{verif_code}</strong></p>
+	<p>Your email verification code is: <h1><strong>{verif_code}</strong></h1></p>
 	<p>Please use this code to verify your email address.</p>
 	"""
 	message = MessageSchema(
@@ -64,4 +68,21 @@ async def api_key_auth(api_key: str = Security(APIKeyHeader(name="X-API-Key", au
 		raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="API Key missing")
 	validate_api_key(api_key)
 	return api_key
+
+async def generate_thumbnail(file_bytes: bytes, filename: str) -> BytesIO:
+	ext = os.path.splitext(filename)[1].lower()
+	if ext != ".pdf":
+		raise ValueError("Only PDF files are supported for thumbnail generation.")
+	# Load PDF from bytes
+	pdf_doc = fitz.open(stream=file_bytes, filetype="pdf")
+	page = pdf_doc.load_page(0)
+	pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+	# Convert to PIL image
+	img = Image.open(BytesIO(pix.tobytes("png")))
+	img.thumbnail((300, 300))
+	# SAVE TO BUFFER
+	buffer = BytesIO()
+	img.save(buffer, format="JPEG")
+	buffer.seek(0)
+	return buffer
 

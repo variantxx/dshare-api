@@ -44,3 +44,9 @@ class SignupOut(BaseModel):
 	verif_code: str
 	birth_date: Optional[datetime] = None
 
+# UPLOAD FILE RESPONSE
+class UploadFileResponse(BaseModel):
+	thumbnail_url: str
+	file_url: str
+	hash: str
+

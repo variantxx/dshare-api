@@ -10,3 +10,7 @@ bcrypt
 supabase
 fastapi-mail
 slowapi
+supabase
+fitz
+frontend
+PyMuPDF

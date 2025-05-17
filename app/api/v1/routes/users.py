@@ -1,5 +1,3 @@
-import random
-import string
 from fastapi import APIRouter, Depends, Request, status, HTTPException, Query
 from slowapi import Limiter
 from slowapi.util import get_remote_address
