@@ -38,7 +38,11 @@ Follow the following steps to setup the project.
 5. Run the project:
 
     ```bash
+    # Run in localhost
     uvicorn app.main:app
+
+    # Run on local network
+    uvicorn main:app --host 0.0.0.0 --port 8000
     ```
 
 ## License

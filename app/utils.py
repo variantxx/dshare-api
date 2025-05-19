@@ -73,14 +73,12 @@ async def generate_thumbnail(file_bytes: bytes, filename: str) -> BytesIO:
 	ext = os.path.splitext(filename)[1].lower()
 	if ext != ".pdf":
 		raise ValueError("Only PDF files are supported for thumbnail generation.")
-	# Load PDF from bytes
 	pdf_doc = fitz.open(stream=file_bytes, filetype="pdf")
 	page = pdf_doc.load_page(0)
 	pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
 	# Convert to PIL image
 	img = Image.open(BytesIO(pix.tobytes("png")))
-	img.thumbnail((300, 300))
-	# SAVE TO BUFFER
+	img.thumbnail((512, 512), Image.LANCZOS)
 	buffer = BytesIO()
 	img.save(buffer, format="JPEG")
 	buffer.seek(0)
