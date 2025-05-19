@@ -42,7 +42,7 @@ Follow the following steps to setup the project.
     uvicorn app.main:app
 
     # Run on local network
-    uvicorn main:app --host 0.0.0.0 --port 8000
+    uvicorn app.main:app --host 0.0.0.0 --port 8000
     ```
 
 ## License
